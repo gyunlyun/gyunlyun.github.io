@@ -107,21 +107,18 @@ pip版本：pip 23.3.1&lt;/p>
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nb">PS &lt;/span>&lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">null&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">pip&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="nb">frida-tools&lt;/span> &lt;span class="n">-i&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="n">pypi&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">tuna&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">tsinghua&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">edu&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">simple&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">......&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Successfully&lt;/span> &lt;span class="n">installed&lt;/span> &lt;span class="n">colorama&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">0.4&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">6&lt;/span> &lt;span class="n">frida&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">16.1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">8&lt;/span> &lt;span class="nb">frida-tools&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">12.3&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">0&lt;/span> &lt;span class="nb">prompt-toolkit&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">3.0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">41&lt;/span> &lt;span class="n">pygments&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">2.17&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">2&lt;/span> &lt;span class="n">wcwidth&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">0.2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">12&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nb">PS &lt;/span>&lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">null&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">frida&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="n">-version&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nb">PS &lt;/span>&lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">null&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">frida&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="n">-version&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mf">16.1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">8&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>使用基于frida的工具：&lt;code>pip install -r requirements.txt &lt;/code>。&lt;/p></description></item></channel></rss>
+&lt;/div>&lt;p>使用基于frida的工具：&lt;code>pip install -r requirements.txt &lt;/code>。&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.loganjin.cn/article/virtualenvwrapper/" title="Linux、Mac、windows 系统下 配置Python虚拟环境 `virtualenvwrapper`教程 workon 切换环境 非常简单方便"
+target="_blank" rel="noopener"
+>参考文档&lt;/a>&lt;/p></description></item></channel></rss>
