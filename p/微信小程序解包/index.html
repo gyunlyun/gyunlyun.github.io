@@ -1,0 +1,443 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content='[toc] 小程序反编译 环境与工具 操作系统：Windows 11 23H2 微信版本：3.9.10.19 wxapkg：https://github.com/wux1an/wxapkg unveilr：https://github.com/junxiaqiao/unveilr-v2.0.0 写在前面 Q：如何找到小程序文件位置？ A：在微信的设置找到文件路径，小程序文件位于 \\WeChat Files\\Applet\\。 Q：小程序目录下文件太多了，找不到要解包的小程序？ A：使用 wxapkg 的 scan 功能，联网状态下会获取小程序名称。或者删除目录下所有文件再打开一次小程序。 wxapkg ⚠ 只支持 Windows 系统 安装 从 Github Release 下载可执行文件，或者下载源码编译。 使用 程序的使用说明。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 > .\\wxapkg.exe -h A tool to scan and decrypt wechat mini program Usage: wxapkg [command] Available Commands: help Help about any command scan Scan the wechat mini program unpack Decrypt wechat mini program Flags: --disable-beautify disable js,html,json beautify -h, --help help for wxapkg -v, --version version for wxapkg Use "wxapkg [command] --help" for more information about a command.'><title>微信小程序解包</title>
+<link rel=canonical href=https://gyunlyun.github.io/p/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%A7%A3%E5%8C%85/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="微信小程序解包"><meta property='og:description' content='[toc] 小程序反编译 环境与工具 操作系统：Windows 11 23H2 微信版本：3.9.10.19 wxapkg：https://github.com/wux1an/wxapkg unveilr：https://github.com/junxiaqiao/unveilr-v2.0.0 写在前面 Q：如何找到小程序文件位置？ A：在微信的设置找到文件路径，小程序文件位于 \\WeChat Files\\Applet\\。 Q：小程序目录下文件太多了，找不到要解包的小程序？ A：使用 wxapkg 的 scan 功能，联网状态下会获取小程序名称。或者删除目录下所有文件再打开一次小程序。 wxapkg ⚠ 只支持 Windows 系统 安装 从 Github Release 下载可执行文件，或者下载源码编译。 使用 程序的使用说明。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 > .\\wxapkg.exe -h A tool to scan and decrypt wechat mini program Usage: wxapkg [command] Available Commands: help Help about any command scan Scan the wechat mini program unpack Decrypt wechat mini program Flags: --disable-beautify disable js,html,json beautify -h, --help help for wxapkg -v, --version version for wxapkg Use "wxapkg [command] --help" for more information about a command.'><meta property='og:url' content='https://gyunlyun.github.io/p/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%A7%A3%E5%8C%85/'><meta property='og:site_name' content='gyunlyun'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='微信小程序'><meta property='article:tag' content='逆向'><meta property='article:published_time' content='2024-05-14T00:57:01+08:00'><meta property='article:modified_time' content='2024-05-14T00:57:01+08:00'><meta name=twitter:title content="微信小程序解包"><meta name=twitter:description content='[toc] 小程序反编译 环境与工具 操作系统：Windows 11 23H2 微信版本：3.9.10.19 wxapkg：https://github.com/wux1an/wxapkg unveilr：https://github.com/junxiaqiao/unveilr-v2.0.0 写在前面 Q：如何找到小程序文件位置？ A：在微信的设置找到文件路径，小程序文件位于 \\WeChat Files\\Applet\\。 Q：小程序目录下文件太多了，找不到要解包的小程序？ A：使用 wxapkg 的 scan 功能，联网状态下会获取小程序名称。或者删除目录下所有文件再打开一次小程序。 wxapkg ⚠ 只支持 Windows 系统 安装 从 Github Release 下载可执行文件，或者下载源码编译。 使用 程序的使用说明。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 > .\\wxapkg.exe -h A tool to scan and decrypt wechat mini program Usage: wxapkg [command] Available Commands: help Help about any command scan Scan the wechat mini program unpack Decrypt wechat mini program Flags: --disable-beautify disable js,html,json beautify -h, --help help for wxapkg -v, --version version for wxapkg Use "wxapkg [command] --help" for more information about a command.'><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu23a2254800e417affbf0831e05b0ba85_19598_300x0_resize_box_3.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>❤️</span></figure><div class=site-meta><h1 class=site-name><a href=/>gyunlyun</a></h1><h2 class=site-description>Sugar is sweet, And so are you.</h2></div></header><ol class=menu-social><li><a href=https://github.com/gyunlyun target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#环境与工具>环境与工具</a></li><li><a href=#写在前面>写在前面</a></li><li><a href=#wxapkg>wxapkg</a><ol><li><a href=#安装>安装</a></li><li><a href=#使用>使用</a></li></ol></li><li><a href=#unveilr>unveilr</a><ol><li><a href=#安装-1>安装</a></li><li><a href=#使用-1>使用</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/>信息收集</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%A7%A3%E5%8C%85/>微信小程序解包</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2024年05月14日</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 5 分钟</time></div></footer></div></header><section class=article-content><p>[toc]</p><h1 id=小程序反编译>小程序反编译</h1><h2 id=环境与工具>环境与工具</h2><p>操作系统：Windows 11 23H2</p><p>微信版本：3.9.10.19</p><p>wxapkg：https://github.com/wux1an/wxapkg</p><p>unveilr：https://github.com/junxiaqiao/unveilr-v2.0.0</p><hr><h2 id=写在前面>写在前面</h2><p>Q：如何找到小程序文件位置？
+A：在微信的设置找到文件路径，小程序文件位于 <code>\WeChat Files\Applet\</code>。
+<img src=https://raw.githubusercontent.com/gyunlyun/my-blog-pictures/main/202405140059567.png loading=lazy alt=image-20240513155813459></p><p>Q：小程序目录下文件太多了，找不到要解包的小程序？
+A：使用 wxapkg 的 scan 功能，联网状态下会获取小程序名称。或者删除目录下所有文件再打开一次小程序。</p><hr><h2 id=wxapkg>wxapkg</h2><p>⚠ 只支持 Windows 系统</p><h3 id=安装>安装</h3><p>从 <a class=link href=https://github.com/wux1an/wxapkg/releases/download/v1.5.0/wxapkg_1.5.0_windows_amd64.exe target=_blank rel=noopener>Github Release</a> 下载可执行文件，或者下载源码编译。</p><h3 id=使用>使用</h3><p>程序的使用说明。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>-h</span>
+</span></span><span class=line><span class=cl><span class=n>A</span> <span class=n>tool</span> <span class=n>to</span> <span class=n>scan</span> <span class=n>and</span> <span class=n>decrypt</span> <span class=n>wechat</span> <span class=n>mini</span> <span class=n>program</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Usage</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>wxapkg</span> <span class=p>[</span><span class=no>command</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Available</span> <span class=n>Commands</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>help</span>        <span class=n>Help</span> <span class=n>about</span> <span class=n>any</span> <span class=n>command</span>
+</span></span><span class=line><span class=cl>  <span class=n>scan</span>        <span class=n>Scan</span> <span class=n>the</span> <span class=n>wechat</span> <span class=n>mini</span> <span class=n>program</span>
+</span></span><span class=line><span class=cl>  <span class=n>unpack</span>      <span class=n>Decrypt</span> <span class=n>wechat</span> <span class=n>mini</span> <span class=n>program</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Flags</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>      <span class=p>-</span><span class=n>-disable-beautify</span>   <span class=n>disable</span> <span class=n>js</span><span class=p>,</span><span class=n>html</span><span class=p>,</span><span class=n>json</span> <span class=n>beautify</span>
+</span></span><span class=line><span class=cl>  <span class=n>-h</span><span class=p>,</span> <span class=p>-</span><span class=n>-help</span>               <span class=n>help</span> <span class=k>for</span> <span class=n>wxapkg</span>
+</span></span><span class=line><span class=cl>  <span class=n>-v</span><span class=p>,</span> <span class=p>-</span><span class=n>-version</span>            <span class=n>version</span> <span class=k>for</span> <span class=n>wxapkg</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Use</span> <span class=s2>&#34;wxapkg [command] --help&#34;</span> <span class=k>for</span> <span class=n>more</span> <span class=n>information</span> <span class=n>about</span> <span class=n>a</span> <span class=n>command</span><span class=p>.</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用 scan 功能解包小程序。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=c># scan 功能会扫描指定目录下所有的小程序，选择解包。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>scan</span> <span class=p>-</span><span class=n>-help</span>
+</span></span><span class=line><span class=cl><span class=n>Scan</span> <span class=n>the</span> <span class=n>wechat</span> <span class=n>mini</span> <span class=n>program</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Usage</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>wxapkg</span> <span class=n>scan</span> <span class=p>[</span><span class=no>flags</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Examples</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>scan</span> <span class=n>-r</span> <span class=s2>&#34;D:\WeChat Files\Applet\wx12345678901234&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 扫描小程序文件所在路径</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>scan</span> <span class=n>-r</span> <span class=s2>&#34;D:\WeChat Files\Applet&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 打印目录下的小程序，使用上下按键选择，回车确认。</span>
+</span></span><span class=line><span class=cl><span class=err>┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓</span>
+</span></span><span class=line><span class=cl><span class=err>┃</span> <span class=n>Name</span>    <span class=n>Developer</span>                  <span class=n>Description</span>         <span class=err>┃</span>
+</span></span><span class=line><span class=cl><span class=err>┃────────────────────────────────────────────────────────┃</span>
+</span></span><span class=line><span class=cl><span class=err>┃</span> <span class=n>跳一跳</span>  <span class=n>深圳市腾讯计算机系统有限公司</span>  <span class=n>比比看</span><span class=err>，</span><span class=n>谁跳得更远</span>    <span class=err>┃</span>
+</span></span><span class=line><span class=cl><span class=err>┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</span>
+</span></span><span class=line><span class=cl>  <span class=n>wxid</span><span class=err>:</span> <span class=n>wx7c8d593b2c3a7703</span>
+</span></span><span class=line><span class=cl>  <span class=n>Name</span><span class=err>:</span> <span class=n>跳一跳</span>
+</span></span><span class=line><span class=cl>  <span class=n>Developer</span><span class=err>:</span> <span class=n>深圳市腾讯计算机系统有限公司</span>
+</span></span><span class=line><span class=cl>  <span class=n>Description</span><span class=err>:</span> <span class=n>比比看</span><span class=err>，</span><span class=n>谁跳得更远</span>
+</span></span><span class=line><span class=cl>  <span class=n>Location</span><span class=err>:</span> <span class=n>D:</span><span class=p>\</span><span class=n>WeChat</span> <span class=n>Files</span><span class=p>\</span><span class=n>Applet</span><span class=p>\</span><span class=n>wx7c8d593b2c3a7703</span>
+</span></span><span class=line><span class=cl>  <span class=n>Avatar</span><span class=err>:</span> <span class=n>https</span><span class=err>:</span><span class=p>//</span><span class=n>wx</span><span class=p>.</span><span class=py>qlogo</span><span class=p>.</span><span class=n>cn</span><span class=p>/</span><span class=n>mmhead</span><span class=p>/</span><span class=n>Q3auHgzwzM5GNaPCYMrxHaFLkh3kTduKFFbPlNmeHdkly2QlZLmtibQ</span><span class=p>/</span><span class=mf>0</span>
+</span></span><span class=line><span class=cl>  <span class=n>All</span> <span class=n>information</span> <span class=n>see</span> <span class=s1>&#39;.\wxid.json&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>enter</span> <span class=n>unpack</span> <span class=err>•</span> <span class=err>↑</span><span class=p>/</span><span class=n>k</span> <span class=nb>move </span><span class=n>up</span> <span class=err>•</span> <span class=err>↓</span><span class=p>/</span><span class=n>j</span> <span class=nb>move </span><span class=n>down</span> <span class=err>•</span> <span class=n>q</span> <span class=n>exit</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 选中后开始解包。</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>unpack</span> <span class=n>root</span> <span class=s1>&#39;D:\WeChat Files\Applet\wx7c8d593b2c3a7703&#39;</span> <span class=n>with</span> <span class=mf>30</span> <span class=n>threads</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>unpacked</span>   <span class=mf>185</span> <span class=n>files</span> <span class=n>from</span> <span class=s1>&#39;wx7c8d593b2c3a7703\92\__WITHOUT_MULTI_PLUGINCODE__.wxapkg&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>all</span> <span class=mf>185</span> <span class=n>files</span> <span class=n>saved</span> <span class=n>to</span> <span class=s1>&#39;wx7c8d593b2c3a7703&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>mini</span> <span class=n>program</span> <span class=n>detail</span> <span class=n>info</span> <span class=n>saved</span> <span class=n>to</span> <span class=s1>&#39;wx7c8d593b2c3a7703\detail.json&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>extension</span> <span class=n>statistics</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>png</span>    <span class=mf>153</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>mp3</span>     <span class=mf>22</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>jpg</span>      <span class=mf>5</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>json</span>     <span class=mf>3</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>js</span>       <span class=mf>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>ttf</span>      <span class=mf>1</span>
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>  <span class=c># 解包结果在当前目录下 wx 开头文件夹。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=nb>ls </span><span class=p>.\</span><span class=n>wx7c8d593b2c3a7703</span><span class=p>\</span>
+</span></span><span class=line><span class=cl><span class=n>Mode</span>                 <span class=n>LastWriteTime</span>         <span class=n>Length</span> <span class=n>Name</span>
+</span></span><span class=line><span class=cl><span class=p>----</span>                 <span class=p>-------------</span>         <span class=p>------</span> <span class=p>----</span>
+</span></span><span class=line><span class=cl><span class=n>d</span><span class=p>----</span>           <span class=mf>2024</span><span class=p>/</span><span class=mf>1</span><span class=p>/</span><span class=mf>1</span>    <span class=mf>11</span><span class=err>:</span><span class=mf>11</span>                <span class=mf>92</span>
+</span></span><span class=line><span class=cl><span class=n>-a</span><span class=p>---</span>           <span class=mf>2024</span><span class=p>/</span><span class=mf>1</span><span class=p>/</span><span class=mf>1</span>    <span class=mf>11</span><span class=err>:</span><span class=mf>11</span>            <span class=mf>302</span> <span class=n>detail</span><span class=p>.</span><span class=py>json</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用 unpack 功能解包小程序。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=c># unpack 功能用于手动指定小程序和解包输出目录。</span>
+</span></span><span class=line><span class=cl><span class=p>.\</span><span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>unpack</span> <span class=n>-h</span>
+</span></span><span class=line><span class=cl><span class=n>Decrypt</span> <span class=n>wechat</span> <span class=n>mini</span> <span class=n>program</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Usage</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>wxapkg</span> <span class=n>unpack</span> <span class=p>[</span><span class=no>flags</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Examples</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>unpack</span> <span class=n>-o</span> <span class=n>unpack</span> <span class=n>-r</span> <span class=s2>&#34;D:\WeChat Files\Applet\wx12345678901234&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Flags</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>-h</span><span class=p>,</span> <span class=p>-</span><span class=n>-help</span>            <span class=n>help</span> <span class=k>for</span> <span class=n>unpack</span>
+</span></span><span class=line><span class=cl>  <span class=n>-o</span><span class=p>,</span> <span class=p>-</span><span class=n>-output</span> <span class=n>string</span>   <span class=n>the</span> <span class=n>output</span> <span class=n>path</span> <span class=n>to</span> <span class=n>save</span> <span class=n>result</span> <span class=p>(</span><span class=k>default</span> <span class=s2>&#34;unpack&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>-r</span><span class=p>,</span> <span class=p>-</span><span class=n>-root</span> <span class=n>string</span>     <span class=n>the</span> <span class=n>mini</span> <span class=n>progress</span> <span class=n>path</span> <span class=n>you</span> <span class=n>want</span> <span class=n>to</span> <span class=n>decrypt</span><span class=p>,</span> <span class=n>see</span><span class=err>:</span> <span class=n>C:</span><span class=p>\</span><span class=n>Users</span><span class=p>\</span><span class=n>Null</span><span class=p>\</span><span class=n>Documents</span><span class=p>\</span><span class=n>WeChat</span> <span class=n>Files</span><span class=p>\</span><span class=n>Applet</span><span class=p>\</span><span class=n>wx00000000000000</span>
+</span></span><span class=line><span class=cl>  <span class=n>-n</span><span class=p>,</span> <span class=p>-</span><span class=n>-thread</span> <span class=n>int</span>      <span class=n>the</span> <span class=n>thread</span> <span class=n>number</span> <span class=p>(</span><span class=k>default</span> <span class=mf>30</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Global</span> <span class=n>Flags</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>      <span class=p>-</span><span class=n>-disable-beautify</span>   <span class=n>disable</span> <span class=n>js</span><span class=p>,</span><span class=n>html</span><span class=p>,</span><span class=n>json</span> <span class=n>beautify</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 不指定输出路径，指定要解包的小程序。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>wxapkg</span><span class=p>.</span><span class=py>exe</span> <span class=n>unpack</span> <span class=n>-r</span> <span class=s2>&#34;D:\WeChat Files\Applet\wx7c8d593b2c3a7703\&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>unpack</span> <span class=n>root</span> <span class=s1>&#39;D:\WeChat Files\Applet\wx7c8d593b2c3a7703\&#39;</span> <span class=n>with</span> <span class=mf>30</span> <span class=n>threads</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>unpacked</span>   <span class=mf>185</span> <span class=n>files</span> <span class=n>from</span> <span class=s1>&#39;92\__WITHOUT_MULTI_PLUGINCODE__.wxapkg&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>all</span> <span class=mf>185</span> <span class=n>files</span> <span class=n>saved</span> <span class=n>to</span> <span class=s1>&#39;unpack&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>[+]</span> <span class=n>extension</span> <span class=n>statistics</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>png</span>    <span class=mf>153</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>mp3</span>     <span class=mf>22</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>jpg</span>      <span class=mf>5</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>json</span>     <span class=mf>3</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>ttf</span>      <span class=mf>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span> <span class=p>.</span><span class=py>js</span>       <span class=mf>1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 不指定输出路径的情况下，默认解压到当前目录的 unpack 文件夹。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=nb>ls </span><span class=p>.\</span><span class=n>unpack</span><span class=p>\</span>
+</span></span><span class=line><span class=cl><span class=n>Mode</span>                 <span class=n>LastWriteTime</span>         <span class=n>Length</span> <span class=n>Name</span>
+</span></span><span class=line><span class=cl><span class=p>----</span>                 <span class=p>-------------</span>         <span class=p>------</span> <span class=p>----</span>
+</span></span><span class=line><span class=cl><span class=n>d</span><span class=p>----</span>           <span class=mf>2024</span><span class=p>/</span><span class=mf>1</span><span class=p>/</span><span class=mf>1</span>    <span class=mf>11</span><span class=err>:</span><span class=mf>11</span>                <span class=mf>92</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 可以使用 -o 参数指定输出路径。</span>
+</span></span></code></pre></td></tr></table></div></div><p>查看解包结果。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=c># 解包结果没有小程序原始工程文件结构，关键代码在 game.js 文件。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=n>tree</span> <span class=p>.\</span><span class=n>unpack</span><span class=p>\</span><span class=mf>92</span><span class=p>\</span> <span class=p>/</span><span class=n>f</span>
+</span></span><span class=line><span class=cl><span class=n>D:</span><span class=p>\</span><span class=n>WXAPKG</span><span class=p>\</span><span class=n>UNPACK</span><span class=p>\</span><span class=mf>92</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=nb>app-config</span><span class=p>.</span><span class=py>json</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=n>game</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=nb>package-lock</span><span class=p>.</span><span class=py>json</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=n>package</span><span class=p>.</span><span class=py>json</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>└─</span><span class=n>res</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>  <span class=mf>0</span><span class=p>.</span><span class=n>png</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>  <span class=mf>1</span><span class=p>.</span><span class=n>png</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>  <span class=p>......</span>
+</span></span><span class=line><span class=cl>    <span class=err>├─</span><span class=mf>2d</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>      <span class=mf>555</span><span class=p>.</span><span class=py>png</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>      <span class=n>auth</span><span class=p>.</span><span class=py>png</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>      <span class=p>......</span>
+</span></span><span class=line><span class=cl>    <span class=err>└─</span><span class=n>auth</span>
+</span></span><span class=line><span class=cl>            <span class=n>rank_tip</span><span class=p>.</span><span class=py>png</span>
+</span></span><span class=line><span class=cl>            <span class=n>refresh</span><span class=p>.</span><span class=py>png</span>
+</span></span></code></pre></td></tr></table></div></div><hr><h2 id=unveilr>unveilr</h2><p>⚠新版功能更丰富，但转为闭源，订阅制收费。本文使用 2.0 免费版本。</p><h3 id=安装-1>安装</h3><p>付费使用最新版，免费使用流传最后一版免费版本。</p><h3 id=使用-1>使用</h3><p>程序功能帮助。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>unveilr</span><span class=p>.</span><span class=py>exe</span> <span class=n>-h</span>
+</span></span><span class=line><span class=cl><span class=n>Usage</span><span class=err>:</span> <span class=n>unveilr</span> <span class=p>[</span><span class=no>wx] [options</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Options</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>-v</span><span class=p>,</span> <span class=p>-</span><span class=n>-version</span>               <span class=n>output</span> <span class=n>the</span> <span class=n>version</span> <span class=n>number</span>
+</span></span><span class=line><span class=cl>  <span class=n>-l</span><span class=p>,</span> <span class=p>-</span><span class=n>-log-level</span> <span class=p>&lt;</span><span class=n>level</span><span class=p>&gt;</span>     <span class=nb>Set </span><span class=n>log</span> <span class=n>level</span> <span class=p>(</span><span class=n>choices</span><span class=err>:</span> <span class=s2>&#34;debug&#34;</span><span class=p>,</span> <span class=s2>&#34;info&#34;</span><span class=p>,</span> <span class=s2>&#34;warn&#34;</span><span class=p>,</span> <span class=s2>&#34;error&#34;</span><span class=p>,</span> <span class=k>default</span><span class=err>:</span> <span class=s2>&#34;info&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>-h</span><span class=p>,</span> <span class=p>-</span><span class=n>-help</span>                  <span class=n>display</span> <span class=n>help</span> <span class=k>for</span> <span class=n>command</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Commands</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>wx</span> <span class=p>[</span><span class=no>options</span><span class=p>]</span> <span class=p>&lt;</span><span class=n>packages</span><span class=p>...&gt;</span>  <span class=n>Decompile</span> <span class=n>the</span> <span class=n>WeChat</span> <span class=n>applet</span>
+</span></span><span class=line><span class=cl>  <span class=n>help</span> <span class=p>[</span><span class=no>command</span><span class=p>]</span>              <span class=n>display</span> <span class=n>help</span> <span class=k>for</span> <span class=n>command</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Example</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=p>$</span> <span class=n>unveilr</span> <span class=p>/</span><span class=n>path</span><span class=p>/</span><span class=n>to</span><span class=p>/</span><span class=n>wxapkg</span><span class=p>/</span><span class=n>dir</span><span class=p>/</span>
+</span></span><span class=line><span class=cl>  <span class=p>$</span> <span class=n>unveilr</span> <span class=mf>1</span><span class=p>.</span><span class=n>wxapkg</span> <span class=mf>2</span><span class=p>.</span><span class=n>wxapkg</span> <span class=mf>3</span><span class=p>.</span><span class=n>wxapkg</span> <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>$</span> <span class=n>unveilr</span> <span class=n>wx</span> <span class=p>/</span><span class=n>path</span><span class=p>/</span><span class=n>to</span><span class=p>/</span><span class=n>wxapkg</span><span class=p>/</span><span class=n>dir</span><span class=p>/</span>           <span class=n>Specify</span> <span class=n>wx</span> <span class=n>subcommand</span>
+</span></span><span class=line><span class=cl>  <span class=p>$</span> <span class=n>unveilr</span> <span class=n>wx</span> <span class=mf>1</span><span class=p>.</span><span class=n>wxapkg</span> <span class=mf>2</span><span class=p>.</span><span class=n>wxapkg</span> <span class=mf>3</span><span class=p>.</span><span class=n>wxapkg</span> <span class=p>...</span> <span class=n>Specify</span> <span class=n>wx</span> <span class=n>subcommand</span>
+</span></span><span class=line><span class=cl>  <span class=p>$</span> <span class=n>unveilr</span> <span class=n>wx</span> <span class=n>-h</span>                             <span class=n>Show</span> <span class=n>wx</span> <span class=n>help</span> <span class=n>info</span>
+</span></span></code></pre></td></tr></table></div></div><p>解包使用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=c># 提供小程序包 wxapkg 所在路径直接解包，结果在目标小程序同路径下（\WeChat Files\Applet\wx000\01\）。</span>
+</span></span><span class=line><span class=cl><span class=c># 允许多个包输入或者一个路径。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>unveilr</span><span class=p>.</span><span class=py>exe</span> <span class=s2>&#34;D:\WeChat Files\Applet\wx7c8d593b2c3a7703\92\&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>INFO</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>29</span><span class=err>:</span><span class=mf>08</span> <span class=p>&lt;</span><span class=n>Core</span><span class=p>&gt;</span> <span class=n>From</span> <span class=n>D:</span><span class=p>\</span><span class=n>WeChat</span> <span class=n>Files</span><span class=p>\</span><span class=n>Applet</span><span class=p>\</span><span class=n>wx7c8d593b2c3a7703</span><span class=p>\</span><span class=mf>92</span><span class=p>\</span><span class=n>__WITHOUT_MULTI_PLUGINCODE__</span><span class=p>.</span><span class=py>wxapkg</span> <span class=n>detected</span> <span class=n>wxAppId</span><span class=err>:</span> <span class=n>wx7c8d593b2c3a7703</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>INFO</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>29</span><span class=err>:</span><span class=mf>08</span> <span class=p>&lt;</span><span class=n>Core</span><span class=p>&gt;</span> <span class=n>The</span> <span class=n>package</span> <span class=n>D:</span><span class=p>\</span><span class=n>WeChat</span> <span class=n>Files</span><span class=p>\</span><span class=n>Applet</span><span class=p>\</span><span class=n>wx7c8d593b2c3a7703</span><span class=p>\</span><span class=mf>92</span><span class=p>\</span><span class=n>__WITHOUT_MULTI_PLUGINCODE__</span><span class=p>.</span><span class=py>wxapkg</span> <span class=nb>type </span><span class=n>is</span><span class=err>:</span> <span class=p>[</span><span class=no>GAME</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>INFO</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>29</span><span class=err>:</span><span class=mf>10</span> <span class=p>&lt;</span><span class=n>Bucket</span><span class=p>&gt;</span> <span class=n>Storage</span> <span class=n>has</span> <span class=n>written</span> <span class=mf>338</span> <span class=n>files</span>
+</span></span></code></pre></td></tr></table></div></div><p>wx 子命令支持更多操作。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=p>&gt;</span> <span class=p>.\</span><span class=n>unveilr</span><span class=p>.</span><span class=py>exe</span> <span class=n>wx</span> <span class=n>-h</span>
+</span></span><span class=line><span class=cl><span class=n>Usage</span><span class=err>:</span> <span class=n>unveilr</span> <span class=n>wx</span> <span class=p>[</span><span class=no>options</span><span class=p>]</span> <span class=p>&lt;</span><span class=n>packages</span><span class=p>...&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Decompile</span> <span class=n>the</span> <span class=n>WeChat</span> <span class=n>applet</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Arguments</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>packages</span>              <span class=nb>Set </span><span class=n>package</span> <span class=n>path</span><span class=p>,</span> <span class=n>could</span> <span class=n>be</span> <span class=n>a</span> <span class=n>file</span><span class=p>,</span> <span class=n>directory</span> <span class=n>or</span> <span class=n>multiple</span> <span class=n>files</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Options</span><span class=err>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>-i</span><span class=p>,</span> <span class=p>-</span><span class=n>-appid</span> <span class=p>&lt;</span><span class=n>appid</span><span class=p>&gt;</span>   <span class=nb>Set </span><span class=n>wxAppId</span><span class=p>,</span> <span class=n>not</span> <span class=n>provided</span> <span class=n>will</span> <span class=k>try</span> <span class=n>to</span> <span class=n>fetch</span> <span class=n>from</span> <span class=n>path</span>
+</span></span><span class=line><span class=cl>  <span class=o>-f</span><span class=p>,</span> <span class=p>-</span><span class=n>-format</span>          <span class=n>Enable</span> <span class=n>format</span> <span class=n>code</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span><span class=n>-no-clear-decompile</span>  <span class=n>Retain</span> <span class=n>decompiling</span> <span class=n>residual</span> <span class=n>files</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span><span class=n>-no-clear-save</span>       <span class=n>The</span> <span class=n>path</span> <span class=n>to</span> <span class=n>be</span> <span class=n>saved</span> <span class=n>will</span> <span class=n>not</span> <span class=n>be</span> <span class=n>cleared</span>
+</span></span><span class=line><span class=cl>  <span class=n>-p</span><span class=p>,</span> <span class=p>-</span><span class=n>-no-parse</span>        <span class=n>Only</span> <span class=n>extract</span> <span class=n>files</span><span class=p>,</span> <span class=k>do</span> <span class=n>not</span> <span class=n>parse</span>
+</span></span><span class=line><span class=cl>  <span class=n>-d</span><span class=p>,</span> <span class=p>-</span><span class=n>-depth</span> <span class=p>&lt;</span><span class=n>depth</span><span class=p>&gt;</span>   <span class=nb>Set read-depth</span> <span class=p>(</span><span class=k>default</span><span class=err>:</span> <span class=mf>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>-o</span><span class=p>,</span> <span class=p>-</span><span class=n>-output</span> <span class=p>&lt;</span><span class=n>path</span><span class=p>&gt;</span>   <span class=nb>Set </span><span class=n>output</span> <span class=n>path</span><span class=p>,</span> <span class=k>default</span><span class=err>:</span> <span class=n>main</span> <span class=n>package</span> <span class=n>whit</span> <span class=n>out</span>
+</span></span><span class=line><span class=cl>  <span class=p>-</span><span class=n>-clear-output</span>        <span class=n>Empty</span> <span class=n>the</span> <span class=n>specified</span> <span class=n>output</span> <span class=n>folder</span>
+</span></span><span class=line><span class=cl>  <span class=n>-h</span><span class=p>,</span> <span class=p>-</span><span class=n>-help</span>            <span class=n>display</span> <span class=n>help</span> <span class=k>for</span> <span class=n>command</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 解包小程序并输出到 .\tyt，同时格式化输出得到小程序原有结构。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span>  <span class=p>.\</span><span class=n>unveilr</span><span class=p>.</span><span class=py>exe</span> <span class=n>wx</span> <span class=s2>&#34;D:\WeChat Files\Applet\wx7c8d593b2c3a7703\92\&#34;</span> <span class=n>-o</span> <span class=p>.\</span><span class=n>tyt</span> <span class=o>-f</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>WARN</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>38</span><span class=err>:</span><span class=mf>52</span> <span class=p>&lt;</span><span class=n>Bucket</span><span class=p>&gt;</span> <span class=n>Turning</span> <span class=n>on</span> <span class=n>code</span> <span class=n>formatting</span> <span class=n>can</span> <span class=n>slow</span> <span class=n>down</span> <span class=n>some</span> <span class=n>operations</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>INFO</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>38</span><span class=err>:</span><span class=mf>52</span> <span class=p>&lt;</span><span class=n>Core</span><span class=p>&gt;</span> <span class=n>From</span> <span class=n>D:</span><span class=p>\</span><span class=n>WeChat</span> <span class=n>Files</span><span class=p>\</span><span class=n>Applet</span><span class=p>\</span><span class=n>wx7c8d593b2c3a7703</span><span class=p>\</span><span class=mf>92</span><span class=p>\</span><span class=n>__WITHOUT_MULTI_PLUGINCODE__</span><span class=p>.</span><span class=py>wxapkg</span> <span class=n>detected</span> <span class=n>wxAppId</span><span class=err>:</span> <span class=n>wx7c8d593b2c3a7703</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>INFO</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>38</span><span class=err>:</span><span class=mf>52</span> <span class=p>&lt;</span><span class=n>Core</span><span class=p>&gt;</span> <span class=n>The</span> <span class=n>package</span> <span class=n>D:</span><span class=p>\</span><span class=n>WeChat</span> <span class=n>Files</span><span class=p>\</span><span class=n>Applet</span><span class=p>\</span><span class=n>wx7c8d593b2c3a7703</span><span class=p>\</span><span class=mf>92</span><span class=p>\</span><span class=n>__WITHOUT_MULTI_PLUGINCODE__</span><span class=p>.</span><span class=py>wxapkg</span> <span class=nb>type </span><span class=n>is</span><span class=err>:</span> <span class=p>[</span><span class=no>GAME</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=no>INFO</span><span class=p>]</span> <span class=mf>00</span><span class=err>:</span><span class=mf>38</span><span class=err>:</span><span class=mf>57</span> <span class=p>&lt;</span><span class=n>Bucket</span><span class=p>&gt;</span> <span class=n>Storage</span> <span class=n>has</span> <span class=n>written</span> <span class=mf>338</span> <span class=n>files</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 解包结果有小程序原始工程文件结构，可以看到文件排布。</span>
+</span></span><span class=line><span class=cl><span class=p>&gt;</span> <span class=n>tree</span> <span class=p>.\</span><span class=n>tyt</span><span class=p>\</span> <span class=p>/</span><span class=n>f</span>
+</span></span><span class=line><span class=cl><span class=n>D:</span><span class=p>\</span><span class=n>WXAPK</span><span class=p>\</span><span class=n>UNVEILR</span><span class=p>\</span><span class=n>TYT</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=n>game</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=n>game</span><span class=p>.</span><span class=py>json</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=nb>package-lock</span><span class=p>.</span><span class=py>json</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=n>package</span><span class=p>.</span><span class=py>json</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>├─</span><span class=nv>@babel</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>└─</span><span class=n>runtime</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>      <span class=err>└─</span><span class=n>helpers</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>              <span class=n>Arrayincludes</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>              <span class=p>......</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>├─</span><span class=n>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>  <span class=n>block</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>  <span class=p>......</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>├─</span><span class=n>control</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>      <span class=n>battleCtrl</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>      <span class=p>......</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span> <span class=p>......</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>  <span class=err>└─</span><span class=n>util</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>          <span class=n>common</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>          <span class=n>encryption</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>          <span class=n>forceUpdate</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>          <span class=n>log</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>          <span class=n>util</span><span class=p>.</span><span class=py>js</span>
+</span></span><span class=line><span class=cl><span class=err>│</span>
+</span></span><span class=line><span class=cl><span class=err>└─</span><span class=n>res</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>  <span class=p>......</span>
+</span></span><span class=line><span class=cl>    <span class=err>│</span>
+</span></span><span class=line><span class=cl>    <span class=err>└─</span><span class=n>auth</span>
+</span></span><span class=line><span class=cl>            <span class=n>rank_tip</span><span class=p>.</span><span class=py>png</span>
+</span></span><span class=line><span class=cl>            <span class=n>refresh</span><span class=p>.</span><span class=py>png</span>
+</span></span></code></pre></td></tr></table></div></div></section><footer class=article-footer><section class=article-tags><a href=/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/>微信小程序</a>
+<a href=/tags/%E9%80%86%E5%90%91/>逆向</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><footer class=site-footer><section class=copyright>&copy;
+2023 -
+2024 gyunlyun</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
