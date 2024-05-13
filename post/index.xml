@@ -156,7 +156,7 @@ A：使用 wxapkg 的 scan 功能，联网状态下会获取小程序名称。�
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">-&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="py">js&lt;/span> &lt;span class="mf">1&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">-&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="py">ttf&lt;/span> &lt;span class="mf">1&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c"># 解包结果在当前目录下 wx 开头文件夹。&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 解包结果在当前目录下 wx 开头文件夹。&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nb">ls &lt;/span>&lt;span class="p">.\&lt;/span>&lt;span class="n">wx7c8d593b2c3a7703&lt;/span>&lt;span class="p">\&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Mode&lt;/span> &lt;span class="n">LastWriteTime&lt;/span> &lt;span class="n">Length&lt;/span> &lt;span class="n">Name&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">----&lt;/span> &lt;span class="p">-------------&lt;/span> &lt;span class="p">------&lt;/span> &lt;span class="p">----&lt;/span>
