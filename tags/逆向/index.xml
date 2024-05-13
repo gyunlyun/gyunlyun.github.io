@@ -6,13 +6,13 @@
 &lt;p>unveilr：https://github.com/junxiaqiao/unveilr-v2.0.0&lt;/p>
 &lt;hr>
 &lt;h2 id="写在前面">写在前面
-&lt;/h2>&lt;p>Q：如何找到小程序文件位置？
+&lt;/h2>&lt;p>Q：如何找到小程序文件位置？&lt;br>
 A：在微信的设置找到文件路径，小程序文件位于 &lt;code>\WeChat Files\Applet\&lt;/code>。
 &lt;img src="https://raw.githubusercontent.com/gyunlyun/my-blog-pictures/main/202405140059567.png"
 loading="lazy"
 alt="image-20240513155813459"
 >&lt;/p>
-&lt;p>Q：小程序目录下文件太多了，找不到要解包的小程序？
+&lt;p>Q：小程序目录下文件太多了，找不到要解包的小程序？&lt;br>
 A：使用 wxapkg 的 scan 功能，联网状态下会获取小程序名称。或者删除目录下所有文件再打开一次小程序。&lt;/p>
 &lt;hr>
 &lt;h2 id="wxapkg">wxapkg
